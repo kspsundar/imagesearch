@@ -133,7 +133,11 @@ fieldset {
     flex:1 auto;
     margin:10px;
     display:flex;
-    justify-content:center;
+    justify-content:center;    
+}
+.flex .column-left {
+    flex:0 0 150px;
+    height:100px;
 }
 .flex .column-left img {
     max-width:100%;
