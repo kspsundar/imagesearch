@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pixabay - Find your images</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="pixabay.css" type="text/css" rel="stylesheet" />  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>   
+</head>
+<body>     
+<div class="header">
+    <form action="#">
+        <fieldset>
+            <!-- <input class="input flatpickr" type="text" value="2026-06-18 09:00" placeholder="Select Date" /> -->
+            <input class="input" type="text" value="" placeholder="Search your image" />
+            <a class="find">Find</a>
+            <i class="fa fa-filter"></i>
+            <div class="categories">
+                <span>nature</span>
+                <span>flowers</span>
+                <span>background</span>
+                <span>sunset</span>
+                <span>forest</span>
+                <span>landscape</span>
+                <span>sky</span>
+                <span>cat</span>
+                <span>beach</span>
+                <span>wallpaper</span>
+                <span>mountains</span>
+                <span>dog</span>
+                <span>iphone</span>
+                <span>wallpaper</span>
+            </div>
+        </fieldset>
+    </form>    
+</div>
+<div class="wrapper">
+    <div class="flex">
+        
+    </div>    
+</div> 
+<!-- <div class="flex page">
+    <input type="text" class="pagenumber" value="1" /><span class="total"></span><button class="submit">Submit</button>
+</div> -->
+<div class="flex page">
+    
+</div> 
+<!-- <div style="background:url(images/gray.svg);height:100px;width:500px;border:5px solid #f0f;"></div> -->
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">    
+    const showImages = async (keyword,recordNo) => {
+        //let records=50; 
+        let records=200;       
+        const url= await fetch(`https://pixabay.com/api/?key=56370315-822db61694be69613f6080901&q=${keyword.toLowerCase()}&page=&per_page=${records}`);//${recordNo}
+        const response = await (url.json());        
+        let data=""; 
+        let from=(recordNo-1)*50;
+        let to=(50)*recordNo-1;         
+        response.hits.forEach((o,i) => {           
+            if((i+from)<=to){
+            //if(i<records){
+                let seq=i+from;
+                //let seq=i;                
+                data+=`<div class="column-left ${((/.png$/).test(response.hits[seq].previewURL))?'gray':''}"><img src="${response.hits[seq].previewURL}" alt="${response.hits[seq].previewURL}" title="${response.hits[seq].previewURL}"/></div>`;
+            }            
+        });           
+        $(".wrapper .flex").html(data);        
+        let b="",a=Array.from({length:Math.ceil(records/50)},(_,d) => b=`<span>${d+1}</span>`);
+        $(".flex.page").html(a);
+        $(".flex.page span").first().addClass("active");
+        $(".flex.page span").on("click",function() {
+            let pagenumber=parseInt($(this).text());
+            showImages($(".input").val(),pagenumber);
+        }) 
+    }         
+    $(document).ready(function() {        
+        $(".find").on("click", function () {
+            showImages($(".input").val(),1);
+        })
+        // $(".fa-filter").on("click",function () {
+        //     $(".categories").css("display","flex");
+        // })
+        // $(".categories span").on("click",function () {
+        //     $(".categories span").removeClass("active");
+        //     $(this).addClass("active");
+        //     showImages($(this).html(),2);
+        // });
+        $(".submit").on("click",function () {
+            let pagenumber=$(".pagenumber").val();
+            showImages($(".input").val(),pagenumber);
+        });             
+    });     
+</script>
+</body>
+</html>      
